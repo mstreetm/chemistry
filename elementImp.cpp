@@ -12,6 +12,11 @@ ElementData::ElementData(std::string s, float mm){
   molarMass = mm;
 }
 
+ElementData::ElementData(std::string s){
+  symbol = s;
+  molarMass = -1;
+}
+
 ElementData::ElementData(const ElementData& a){
   symbol = a.symbol;
   molarMass = a.molarMass;
@@ -121,19 +126,19 @@ Amount::Amount(const Amount& a){
   grams = a.grams;
 }
 
-GroupOf::GroupOf(){
+Element::Element(){
   ElementData tempED;
   elementData = tempED;
   Amount tempA;
   amount = tempA;
 }
 
-GroupOf::GroupOf(ElementData e, Amount a){
+Element::Element(ElementData e, Amount a){
   elementData = e;
   amount = a;
 }
 
-GroupOf::GroupOf(const GroupOf& a){
+Element::Element(const Element& a){
   elementData = a.elementData;
   amount = a.amount;
 }
@@ -144,7 +149,7 @@ void Amount::setGrams(float mm){
   }
 }
 
-void GroupOf::setGrams(){
+void Element::setGrams(){
   if(amount.grams == -1){
     amount.grams = amount.moles * elementData.molarMass;
   }
@@ -160,7 +165,7 @@ Compound::Compound(){
   amount = tempA;
 }
 
-Compound::Compound(std::vector<GroupOf> elems, int num){
+Compound::Compound(std::vector<Element> elems, int num){
   for(int i = 0; i < num; i++){
     elements.push_back(elems[i]);
   }
@@ -180,4 +185,11 @@ Compound::Compound(const Compound& a){
   name = a.name;
   compoundData = a.compoundData;
   amount = a.amount;
+}
+
+Element::Element(std::string symbol, int num){
+  ElementData tempED(symbol);
+  elementData = tempED;
+  Amount tempA('a', num);
+  amount = tempA;
 }

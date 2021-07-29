@@ -6,6 +6,7 @@ struct ElementData{
   float molarMass;
   ElementData();
   ElementData(std::string s, float mm);
+  ElementData(std::string s);
   ElementData(const ElementData& a);
 };
 
@@ -24,23 +25,24 @@ struct Amount{
   void setGrams(float mm);
 };
 
-struct GroupOf{
+struct Element{
   ElementData elementData;
   Amount amount;
-  GroupOf();
-  GroupOf(ElementData e, Amount a);
-  GroupOf(const GroupOf& a);
+  Element();
+  Element(std::string symbol, int num);
+  Element(ElementData e, Amount a);
+  Element(const Element& a);
   void setGrams();
 };
 
 struct Compound{
-  std::vector<GroupOf> elements;
+  std::vector<Element> elements;
   int numElements;
   std::string name;
   ElementData compoundData;
   Amount amount;
   //will probably need to add more constructors later
   Compound();
-  Compound(std::vector<GroupOf> elems, int num);
+  Compound(std::vector<Element> elems, int num);
   Compound(const Compound& a);
 };
