@@ -1,5 +1,6 @@
 #include "element.h"
 #include <string>
+#include <vector>
 
 ElementData::ElementData(){
   symbol = "Not Specified";
@@ -147,4 +148,36 @@ void GroupOf::setGrams(){
   if(amount.grams == -1){
     amount.grams = amount.moles * elementData.molarMass;
   }
+}
+
+Compound::Compound(){
+  //no init on elements
+  numElements = -1;
+  name = "Not Specified";
+  ElementData tempCD;
+  compoundData = tempCD;
+  Amount tempA;
+  amount = tempA;
+}
+
+Compound::Compound(std::vector<GroupOf> elems, int num){
+  for(int i = 0; i < num; i++){
+    elements.push_back(elems[i]);
+  }
+  numElements = num;
+  name = "Not Specified";
+  ElementData tempCD;
+  compoundData = tempCD;
+  Amount tempA;
+  amount = tempA;
+}
+
+Compound::Compound(const Compound& a){
+  for(int i = 0; i < a.numElements; i++){
+    elements.push_back(a.elements[i]);
+  }
+  numElements = a.numElements;
+  name = a.name;
+  compoundData = a.compoundData;
+  amount = a.amount;
 }

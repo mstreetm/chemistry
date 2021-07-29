@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 
 struct ElementData{
   std::string symbol;
@@ -30,4 +31,16 @@ struct GroupOf{
   GroupOf(ElementData e, Amount a);
   GroupOf(const GroupOf& a);
   void setGrams();
+};
+
+struct Compound{
+  std::vector<GroupOf> elements;
+  int numElements;
+  std::string name;
+  ElementData compoundData;
+  Amount amount;
+  //will probably need to add more constructors later
+  Compound();
+  Compound(std::vector<GroupOf> elems, int num);
+  Compound(const Compound& a);
 };
