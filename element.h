@@ -10,9 +10,9 @@ struct ElementData{
 };
 
 struct Amount{
-  static float ATOMS_PER_MOLE;
+  static float NUMBER_PER_MOLE;
   static float LITERS_PER_MOLE;
-  float atoms;
+  float number;//could be atoms, molecules, foumula units
   float moles;
   float liters;
   float grams;

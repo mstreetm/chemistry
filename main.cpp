@@ -9,8 +9,8 @@ int main(){
   Amount b('a', 7e23);
   GroupOf c(a, b);
   cout << a.symbol << " " << a.molarMass << "\n";
-  cout << b.atoms << " " << b.moles << " " << b.liters << " " << b.grams << "\n";
-  cout << c.elementData.symbol << " " << c.amount.atoms << "\n";
+  cout << b.number << " " << b.moles << " " << b.liters << " " << b.grams << "\n";
+  cout << c.elementData.symbol << " " << c.amount.number << "\n";
   c.setGrams();
   cout << c.amount.grams << "\n";
   return 0;
