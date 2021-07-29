@@ -136,3 +136,15 @@ GroupOf::GroupOf(const GroupOf& a){
   elementData = a.elementData;
   amount = a.amount;
 }
+
+void Amount::setGrams(float mm){
+  if(grams == -1){
+    grams = moles * mm;
+  }
+}
+
+void GroupOf::setGrams(){
+  if(amount.grams == -1){
+    amount.grams = amount.moles * elementData.molarMass;
+  }
+}

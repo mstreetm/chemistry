@@ -11,5 +11,7 @@ int main(){
   cout << a.symbol << " " << a.molarMass << "\n";
   cout << b.atoms << " " << b.moles << " " << b.liters << " " << b.grams << "\n";
   cout << c.elementData.symbol << " " << c.amount.atoms << "\n";
+  c.setGrams();
+  cout << c.amount.grams;
   return 0;
 }

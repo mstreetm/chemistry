@@ -20,6 +20,7 @@ struct Amount{
   Amount(char s, double a);
   Amount(char s, float a);
   Amount(const Amount& a);
+  void setGrams(float mm);
 };
 
 struct GroupOf{
@@ -28,4 +29,5 @@ struct GroupOf{
   GroupOf();
   GroupOf(ElementData e, Amount a);
   GroupOf(const GroupOf& a);
+  void setGrams();
 };
