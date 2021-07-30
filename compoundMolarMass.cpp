@@ -1,5 +1,6 @@
 #include "element.h"
 #include "menu.h"
+#include "stringHelpers.h"
 
 #include <iostream>
 #include <fstream>
@@ -16,12 +17,6 @@ using namespace std;
 void updateFiles();
 string getCompoundString();
 void parseCompoundString(string compound);
-bool isUpperLetter(char a);
-bool isLowerLetter(char a);
-bool isNumber(char a);
-bool isOpenParentheses(char a);
-bool isClosedParentheses(char a);
-int stringToNum(string snum);
 void addMolarMasses();
 float getCompoundMolarMass();
 void getPreviousCompounds();
@@ -31,9 +26,10 @@ bool checkCmpdList(string compound);
 map<string, float> cmpdList;
 bool cmpdChanged = false;
 bool elemChanged = false;
-vector<Element> elements;
-int numElem = 0;
+// vector<Element> elements;
+// int numElem = 0;
 bool doFileInput = false;
+Compound compound;
 // ifstream fin("C:/Users/moniq/Desktop/input.txt");
 
 void runCompoundMolarMass(){
@@ -70,136 +66,81 @@ void updateFiles(){
 }
 
 string getCompoundString(){
-  string compound;
   if(doFileInput){
-    fin >> compound;
+    fin >> compound.compoundData.symbol;
   }else{
-    cout << "Enter the compound: \n";
-    cin >> compound;
+    cout << "Enter the compound formula: ";
+    cin >> compound.compoundData.symbol;
   }
-  return compound;
+  return compound.compoundData.symbol;
 }
 
-void parseCompoundString(string compound){
+void parseCompoundString(Compound cmpd){
   //elements.clear();
   stack<int> parenStack;
-  for(int i = 0; i < compound.length(); i++){
-    if(isUpperLetter(compound[i])){
+  for(int i = 0; i < cmpd.compoundData.symbol.length(); i++){
+    if(isUpperLetter(cmpd.compoundData.symbol[i])){
       string key = "";
-      key += compound[i];
+      key += cmpd.compoundData.symbol[i];
       string number = "";
       int num;
-      if(isLowerLetter(compound[i + 1])){
-        key += compound[i + 1];
+      if(isLowerLetter(cmpd.compoundData.symbol[i + 1])){
+        key += cmpd.compoundData.symbol[i + 1];
         i++;
       }
-      while(isNumber(compound[i + 1])){
-        number += compound[i + 1];
+      while(isNumber(cmpd.compoundData.symbol[i + 1])){
+        number += cmpd.compoundData.symbol[i + 1];
         i++;
       }
       num = stringToNum(number);
       Element tempElem(key, num);
-      elements.push_back(tempElem);
-      numElem++;
-    }else if(isOpenParentheses(compound[i])){
-      parenStack.push(numElem);
-    }else if(isClosedParentheses(compound[i])){
+      cmpd.elements.push_back(tempElem);
+      cmpd.numElements++;
+    }else if(isOpenParentheses(cmpd.compoundData.symbol[i])){
+      parenStack.push(cmpd.numElements);
+    }else if(isClosedParentheses(cmpd.compoundData.symbol[i])){
       int start = parenStack.top();
       parenStack.pop();
       string number = "";
       int num;
-      while(isNumber(compound[i + 1])){
-        number += compound[i + 1];
+      while(isNumber(cmpd.compoundData.symbol[i + 1])){
+        number += cmpd.compoundData.symbol[i + 1];
         i++;
       }
       num = stringToNum(number);
-      for(int i = start; i < numElem; i++){
-        elements[i].amount.number *= num;
+      for(int i = start; i < cmpd.numElements; i++){
+        cmpd.elements[i].amount.number *= num;
       }
     }
   }
 }
 
 void addMolarMasses(){
-  for(int i = 0; i < numElem; i++){
-    if(elemList.find(elements[i].elementData.symbol) == elemList.end()){
-      cout << "There is no molar mass for " << elements[i].elementData.symbol << " in the system, please enter one: \n";
-      cin >> elemList[elements[i].elementData.symbol];
+  for(int i = 0; i < compound.numElements; i++){
+    if(elemList.find(compound.elements[i].elementData.symbol) == elemList.end()){
+      cout << "There is no molar mass for " << compound.elements[i].elementData.symbol << " in the system, please enter one: \n";
+      cin >> elemList[compound.elements[i].elementData.symbol];
       elemChanged = true;
     }
-    elements[i].elementData.molarMass = elemList[elements[i].elementData.symbol];
+    compound.elements[i].elementData.molarMass = elemList[compound.elements[i].elementData.symbol];
   }
 }
 
 float getCompoundMolarMass(){
-  string compound = getCompoundString();
+  // string compound = getCompoundString();
   float molarMass = 0;
-  if(!checkCmpdList(compound)){
+  if(!checkCmpdList(compound.compoundData.symbol)){
     parseCompoundString(compound);
     addMolarMasses();
-    for(auto elem : elements){
+    for(auto elem : compound.elements){
       molarMass += elem.elementData.molarMass * elem.amount.number;
     }
-    cmpdList[compound] = molarMass;
+    cmpdList[compound.compoundData.symbol] = molarMass;
     cmpdChanged = true;
   }else{
-    molarMass = cmpdList[compound];
+    molarMass = cmpdList[compound.compoundData.symbol];
   }
   return molarMass;
-}
-
-bool isNumber(char a){
-  int ia = a;
-  int diff = ia - '0';
-  if((diff > 9) || (diff < 0)){
-    return false;
-  }
-  return true;
-}
-
-bool isLowerLetter(char a){
-  int ia = a;
-  int diff = ia - 'a';
-  if((diff >= 0) && (diff < 26)){
-    return true;
-  }
-  return false;
-}
-
-bool isUpperLetter(char a){
-  int ia = a;
-  int diff = ia - 'A';
-  if((diff >= 0) && (diff < 26)){
-    return true;
-  }
-  return false;
-}
-
-bool isOpenParentheses(char a){
-  if(a == '('){
-    return true;
-  }
-  return false;
-}
-
-bool isClosedParentheses(char a){
-  if(a == ')'){
-    return true;
-  }
-  return false;
-}
-
-int stringToNum(string snum){
-  if(snum == ""){
-    return 1;
-  }
-  int nnum = 0;
-  int len = snum.length();
-  for(int i = 0; i < len; i++){
-    int base = snum[i] - '0';
-    nnum += base * pow(10, len - 1 - i);
-  }
-  return nnum;
 }
 
 void getPreviousCompounds(){
