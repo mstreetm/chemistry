@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void getElementMasses();
+// void getElementMasses();
 void updateFiles();
 string getCompoundString();
 void parseCompoundString(string compound);
@@ -27,14 +27,14 @@ float getCompoundMolarMass();
 void getPreviousCompounds();
 bool checkCmpdList(string compound);
 
-map<string, float> elemList;
+// map<string, float> elemList;
 map<string, float> cmpdList;
 bool cmpdChanged = false;
 bool elemChanged = false;
 vector<Element> elements;
 int numElem = 0;
 bool doFileInput = false;
-ifstream fin("C:/Users/moniq/Desktop/input.txt");
+// ifstream fin("C:/Users/moniq/Desktop/input.txt");
 
 void runCompoundMolarMass(){
   getElementMasses();
@@ -52,19 +52,6 @@ void runCompoundMolarMass(){
     }
   }
   updateFiles();
-}
-
-void getElementMasses(){
-  //gets the element masses from elements.txt and puts them into the map elemList
-  ifstream ein("elements.txt");
-  string key;
-  float value;
-  ein >> key;
-  while(!ein.eof()){
-    ein >> value;
-    elemList[key] = value;
-    ein >> key;
-  }
 }
 
 void updateFiles(){
