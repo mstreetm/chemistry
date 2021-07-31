@@ -53,7 +53,7 @@ unordered_set<int> multiplySet;
 vector<ELement> ELements;
 
 void runEmpiricalMolecular(){
-	getElementMasses();
+	getElementMolarMasses();
 	cout << getEmperical();
 	updateFile();
 }

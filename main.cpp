@@ -6,6 +6,6 @@
 using namespace std;
 
 int main(){
-  runEmpiricalMolecular();
+  runCompoundMolarMass();
   return 0;
 }

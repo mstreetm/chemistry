@@ -34,15 +34,3 @@ struct Element{
   Element(const Element& a);
   void setGrams();
 };
-
-struct Compound{
-  std::vector<Element> elements;
-  int numElements;
-  std::string name;
-  ElementData compoundData;
-  Amount amount;
-  //will probably need to add more constructors later
-  Compound();
-  Compound(std::vector<Element> elems, int num);
-  Compound(const Compound& a);
-};
