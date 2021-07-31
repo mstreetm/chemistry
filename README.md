@@ -7,9 +7,11 @@ cpp files:
   empiricalMolecular.cpp
   compoundMolarMass.cpp
   stringHelpersImp.cpp
+  compoundImp.cpp
 
 header files:
   element.h -> elementImp.cpp
+  compound.h -> compoundImp.cpp
   stringHelpers.h -> stringHelpersImp.cpp
   menu.h -> all other but main
 

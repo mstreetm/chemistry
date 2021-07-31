@@ -1,6 +1,4 @@
-#include "element.h"
 #include "menu.h"
-#include "stringHelpers.h"
 #include "compound.h"
 
 #include <iostream>

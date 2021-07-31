@@ -1,6 +1,8 @@
 #include "element.h"
+#include "menu.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -157,9 +159,25 @@ void Element::setGrams(){
   }
 }
 
+void Element::addMolarMass(){
+  if(elemList.find(elementData.symbol) == elemList.end()){
+    cout << "There is no molar mass for " << elementData.symbol << " in the system, please enter one: \n";
+    cin >> elementData.symbol;
+    elemChanged = true;
+  }
+  elementData.molarMass = elemList[elementData.symbol];
+}
+
 Element::Element(std::string symbol, int num){
   ElementData tempED(symbol);
   elementData = tempED;
   Amount tempA('a', num);
+  amount = tempA;
+}
+
+Element::Element(std::string symbol, float num){
+  ElementData tempED(symbol);
+  elementData = tempED;
+  Amount tempA('g', num);
   amount = tempA;
 }

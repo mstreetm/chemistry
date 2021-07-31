@@ -1,4 +1,3 @@
-#include "element.h"
 #include "compound.h"
 #include "menu.h"
 #include "stringHelpers.h"
@@ -93,12 +92,7 @@ void Compound::parseFormula(){
 
 void Compound::addElementMolarMasses(){
   for(int i = 0; i < numElements; i++){
-    if(elemList.find(elements[i].elementData.symbol) == elemList.end()){
-      cout << "There is no molar mass for " << elements[i].elementData.symbol << " in the system, please enter one: \n";
-      cin >> elemList[elements[i].elementData.symbol];
-      elemChanged = true;
-    }
-    elements[i].elementData.molarMass = elemList[elements[i].elementData.symbol];
+    elements[i].addMolarMass();
   }
 }
 

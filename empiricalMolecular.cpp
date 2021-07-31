@@ -1,4 +1,4 @@
-#include "element.h"
+#include "compound.h"
 #include "menu.h"
 
 #include <iostream>
@@ -9,9 +9,7 @@
 #include <unordered_set>
 #include <vector>
 
-//uncomment to get input from the file
 #define cin fin
-// std::ifstream fin ("C:\\Users\\moniq\\Desktop\\input.txt");
 
 using namespace std;
 
@@ -20,66 +18,52 @@ const int numRV = 9;
 const float roundingValues[numRV] = { 0,1,0.3334,0.6667,0.5,0.2,0.4,0.6,0.8 };
 const float multiplyTo[numRV] = { 1,1,3,3,2,5,5,5,5 };
 
-struct ELement {
-	string symbol;
-	float molarMass;
-
-	//used for MM, found in empFormula
-	int numOfAtoms;
-
-	//needed for empFormula
-	float amount;//user-given
-	float moles;
-	float dbSmall;
-	float rounded;
-
-	//constructor
-	ELement(string sym)
-	{
-		symbol = sym;
-	}
-};
+// struct ELement {
+// 	string symbol;
+// 	float molarMass;
+//
+// 	//used for MM, found in empFormula
+// 	int numOfAtoms;
+//
+// 	//needed for empFormula
+// 	float amount;//user-given
+// 	float moles;
+// 	float dbSmall;
+// 	float rounded;
+//
+// 	//constructor
+// 	ELement(string sym)
+// 	{
+// 		symbol = sym;
+// 	}
+// };
 
 // void getElementMasses();
 string getEmperical();
 float rounder(float num);
 bool isValue(float num, float value);
-void updateFile();
-float getMM();
 
 // map<string, float> elemList;
-bool mapChanged = false;
 unordered_set<int> multiplySet;
-vector<ELement> ELements;
+// vector<ELement> ELements;
+
+Compound compound;
 
 void runEmpiricalMolecular(){
 	getElementMolarMasses();
-	cout << getEmperical();
-	updateFile();
+	cout << "\n" << getEmperical();
+  for(auto elem : compound.elements){
+    cout << elem.elementData.symbol << "\n";
+  }
+	updateFiles();
 }
-
-// void getElementMasses(){
-//   //gets the element masses from ELements.txt and puts them into the map elemList
-// 	ifstream ein("ELements.txt");
-// 	string key;
-// 	float value;
-// 	ein >> key;
-// 	while(!ein.eof())
-// 	{
-// 		ein >> value;
-// 		elemList[key] = value;
-// 		ein >> key;
-// 	}
-// }
 
 string getEmperical(){
   //gets the empirical formula for a compound by prompting the user
-	//element input
-	int numELements;
+	//element input\
 	cout << "How many ELements are there in the compound: ";
-	cin >> numELements;
-	string elem;
-	for(int i = 0; i < numELements; i++){
+	cin >> compound.numElements;
+	for(int i = 0; i < compound.numElements; i++){
 		cout << "Enter the ";
 		switch (i + 1){
 		case 1:
@@ -96,55 +80,52 @@ string getEmperical(){
 			break;
 		}
 		cout << "element symbol: ";
+    string elem;
 		cin >> elem;
-		ELements.push_back(elem);
-		if(elemList.find(elem) == elemList.end()){
-			cout << "There is no molar mass for " << elem << " in the system, please enter one: ";
-			cin >> elemList[elem];
-			mapChanged = true;
-		}
-		ELements[i].molarMass = elemList[elem];
 		cout << "How much " << elem << " is there: ";
-		cin >> ELements[i].amount;
+    float amt;
+    cin >> amt;
+    Element tempE(elem, amt);
+    compound.elements.push_back(tempE);
 	}
+  compound.addElementMolarMasses();
 
 	//Mass to moles
-	for(int i = 0; i < numELements; i++){
-		ELements[i].moles = ELements[i].amount / elemList[ELements[i].symbol];
+	for(int i = 0; i < compound.numElements; i++){
+		compound.elements[i].amount.moles = compound.elements[i].amount.grams / elemList[compound.elements[i].elementData.symbol];
 	}
 
 	//DIVIDE BY SMALL
 	//find small
-	float small = ELements[0].moles;
-	for(int i = 1; i < numELements; i++){
-		if(ELements[i].moles < small){
-			small = ELements[i].moles;
+	float small = compound.elements[0].amount.moles;
+	for(int i = 1; i < compound.numElements; i++){
+		if(compound.elements[i].amount.moles < small){
+			small = compound.elements[i].amount.moles;
 		}
 	}
 
 	//do the division
-	for(int i = 0; i < numELements; i++){
-		ELements[i].dbSmall = ELements[i].moles / small;
+	for(int i = 0; i < compound.numElements; i++){
+		compound.elements[i].amount.moles = compound.elements[i].amount.moles / small;
 	}
 
 	//MULTIPLY 'TILL WHOLE
-	for(int i = 0; i < numELements; i++){
-		ELements[i].rounded = rounder(ELements[i].dbSmall);
+	for(int i = 0; i < compound.numElements; i++){
+		compound.elements[i].amount.moles = rounder(compound.elements[i].amount.moles);
 	}
 	int multiplyValue = 1;
 	for(auto i = multiplySet.begin(); i != multiplySet.end(); i++){
 		multiplyValue *= *i;
 	}
-	for(int i = 0; i < numELements; i++){
-		ELements[i].numOfAtoms = static_cast<int>(ELements[i].rounded * multiplyValue);
+	for(int i = 0; i < compound.numElements; i++){
+		compound.elements[i].amount.number = static_cast<int>(compound.elements[i].amount.moles * multiplyValue);
 	}
 
 	//determine output
-	string empFormula = "";
-	for(int i = 0; i < numELements; i++){
-		empFormula += ELements[i].symbol;
-		if(ELements[i].numOfAtoms != 1){
-			empFormula += to_string(ELements[i].numOfAtoms);
+	for(int i = 0; i < compound.numElements; i++){
+		compound.compoundData.symbol += compound.elements[i].elementData.symbol;
+		if(compound.elements[i].amount.number != 1){
+			compound.compoundData.symbol += to_string(static_cast<int>(compound.elements[i].amount.number));
 		}
 	}
 
@@ -154,7 +135,7 @@ string getEmperical(){
 	//cin >> doMolFormula;
 	//cout << doMolFormula;
 
-	return empFormula;
+	return compound.compoundData.symbol;
 }
 
 float rounder(float num){
@@ -177,13 +158,4 @@ bool isValue(float num, float value){
 		return true;
 	}
 	return false;
-}
-
-void updateFile(){
-	if(mapChanged){
-		ofstream eout("ELements.txt");
-		for(auto i = elemList.begin(); i != elemList.end(); i++){
-			eout << i->first << " " << i->second << "\n";
-		}
-	}
 }

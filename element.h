@@ -30,7 +30,9 @@ struct Element{
   Amount amount;
   Element();
   Element(std::string symbol, int num);
+  Element(std::string symbol, float num);
   Element(ElementData e, Amount a);
   Element(const Element& a);
   void setGrams();
+  void addMolarMass();
 };
