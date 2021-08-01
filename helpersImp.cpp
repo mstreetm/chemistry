@@ -1,8 +1,13 @@
 #include <cmath>
 #include <string>
-#include "stringHelpers.h"
+#include <iostream>
+#include <unordered_set>
+#include "helpers.h"
+#include "menu.h"
 
 using namespace std;
+
+unordered_set<int> multiplySet;
 
 bool isNumber(char a){
   int ia = a;
@@ -56,4 +61,26 @@ int stringToNum(std::string snum){
     nnum += base * pow(10, len - 1 - i);
   }
   return nnum;
+}
+
+float rounder(float num){
+	int base = num - abs(num - static_cast<int>(num));
+	num -= base;
+	for(int i = 0; i < numRV; i++){
+		if(isValue(num, roundingValues[i])){
+      multiplySet.insert(multiplyTo[i]);
+			return(base + roundingValues[i]);
+		}
+	}
+	cout << "What should " << num << " be rounded to: ";
+	float rounded;
+	cin >> rounded;
+	return (base + rounder(rounded));
+}
+
+bool isValue(float num, float value){
+	if((value - MAX_DIFFERENCE < num) && (value + MAX_DIFFERENCE > num)){
+		return true;
+	}
+	return false;
 }
