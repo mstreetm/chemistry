@@ -16,11 +16,14 @@ std::map<string, int> optionList = {
 };
 
 void getDoFileInput(){
+  //asks the user if they would like to get input from a file
   cout << "Would you like file input (1/0): ";
   cin >> doFileInput;
 }
 
 int selectProgram(){
+  //asks the user(or file) what program to run
+  //returns the number of the requested program
   string input;
   if(!doFileInput){
     cout << "Please select a program: ";
@@ -39,9 +42,10 @@ int selectProgram(){
   }else{
     prgm = optionList[input];
   }
-  switch(prgm){
+  switch(prgm){//selects the correct response
     case -2:
       cout << "Invalid response.\n";
+      //no break for a reason, want to include following things
     case -1:
       cout << "Valid responses include the following:\n";
       cout << "For the help page: -1, help, h\n";
@@ -57,6 +61,7 @@ int selectProgram(){
 }
 
 void runProgram(int program){
+  //runs the selected program
   switch(program){
     case 1:
       runCompoundMolarMass();

@@ -13,6 +13,7 @@
 using namespace std;
 
 void runEmpiricalMolecular(){
+  //runs the empirical molecular program
   bool doMolecular = false;
   Compound compound;
   compound.getElementAmounts();
